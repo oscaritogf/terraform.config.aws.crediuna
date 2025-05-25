@@ -68,7 +68,3 @@ variable "s3_bucket_name" {
   type        = string
 }
 
-variable "key_name" {
-  description = "Nombre de la clave SSH para EC2"
-  type        = string
-}
