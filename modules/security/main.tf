@@ -1,27 +1,26 @@
-# === FILE: modules/security/main.tf ===
-
-resource "aws_security_group" "backend_sg" {
-  name        = "backend-sg"
-  description = "Allow inbound traffic"
+# modules/security/main.tf
+resource "aws_security_group" "frontend_sg" {
+  name        = "frontend-sg"
+  description = "Security group para frontend"
   vpc_id      = var.vpc_id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.frontend_ingress_cidr]
   }
 
   ingress {
     from_port   = 443
     to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.frontend_ingress_cidr]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -31,5 +30,57 @@ resource "aws_security_group" "backend_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "frontend-sg"
+  }
+}
+
+resource "aws_security_group" "backend_sg" {
+  name        = "backend-sg"
+  description = "Security group para backend"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = [var.backend_ingress_cidr]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "backend-sg"
+  }
+}
+
+resource "aws_security_group" "rds_sg" {
+  name        = "rds-sg"
+  description = "Security group para RDS"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port       = 1433
+    to_port         = 1433
+    protocol        = "tcp"
+    security_groups = [aws_security_group.backend_sg.id]
+  }
+
+  tags = {
+    Name = "rds-sg"
   }
 }
