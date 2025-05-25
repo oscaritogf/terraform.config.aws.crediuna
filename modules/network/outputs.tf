@@ -1,12 +1,22 @@
-# modules/network/outputs.tf
+# ================================================
+# FILE: modules/network/outputs.tf
+# ================================================
 output "vpc_id" {
-  value = aws_vpc.main.id
+  description = "ID de la VPC"
+  value       = aws_vpc.main.id
 }
 
-output "public_subnet_ids" {  # Plural y array
-  value = aws_subnet.public[*].id
+output "public_subnet_ids" {
+  description = "IDs de las subnets públicas"
+  value       = aws_subnet.public[*].id
 }
 
-output "private_subnet_ids" {  # Agregar este output
-  value = aws_subnet.private[*].id
+output "private_subnet_ids" {
+  description = "IDs de las subnets privadas"
+  value       = aws_subnet.private[*].id
+}
+
+output "internet_gateway_id" {
+  description = "ID del Internet Gateway"
+  value       = aws_internet_gateway.igw.id
 }

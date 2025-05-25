@@ -1,3 +1,6 @@
+# ================================================
+# FILE: variables.tf (ROOT)
+# ================================================
 variable "aws_region" {
   description = "Región de AWS"
   type        = string
@@ -17,7 +20,7 @@ variable "public_subnet_cidrs" {
 }
 
 variable "private_subnet_cidrs" {
-  description = "CIDR blocks para subnets privadas"  
+  description = "CIDR blocks para subnets privadas"
   type        = list(string)
   default     = ["10.0.3.0/24", "10.0.4.0/24"]
 }
@@ -31,42 +34,13 @@ variable "availability_zones" {
 variable "ami_id" {
   description = "AMI ID para instancias EC2"
   type        = string
-  default     = "ami-0c02fb55956c7d316"
+  default     = "ami-0c02fb55956c7d316" # Amazon Linux 2
 }
 
 variable "instance_type" {
   description = "Tipo de instancia EC2"
   type        = string
   default     = "t3.micro"
-}
-
-variable "frontend_ingress_cidr" {
-  description = "CIDR permitido para frontend"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
-variable "backend_ingress_cidr" {
-  description = "CIDR permitido para backend"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
-variable "bucket_name" {
-  description = "Nombre del bucket S3"
-  type        = string
-}
-
-variable "db_password" {
-  description = "Contraseña para RDS"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_username" {
-  description = "Usuario para RDS"
-  type        = string
-  default     = "admin"
 }
 
 variable "key_pair_name" {
@@ -95,15 +69,37 @@ variable "backend_repo" {
   type        = string
 }
 
-variable "rds_username" {
+variable "db_username" {
   description = "Usuario para la base de datos RDS"
   type        = string
+  default     = "admin"
 }
 
-variable "rds_password" {
+variable "db_password" {
   description = "Contraseña para la base de datos RDS"
   type        = string
   sensitive   = true
 }
 
+variable "db_name" {
+  description = "Nombre de la base de datos"
+  type        = string
+  default     = "appdb"
+}
 
+variable "bucket_name" {
+  description = "Nombre del bucket S3"
+  type        = string
+}
+
+variable "frontend_ingress_cidr" {
+  description = "CIDR permitido para acceso al frontend"
+  type        = string
+  default     = "0.0.0.0/0"
+}
+
+variable "backend_ingress_cidr" {
+  description = "CIDR permitido para acceso al backend"
+  type        = string
+  default     = "0.0.0.0/0"
+}

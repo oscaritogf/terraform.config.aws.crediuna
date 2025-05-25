@@ -1,10 +1,13 @@
-# modules/security/main.tf
+# ================================================
+# FILE: modules/security/main.tf
+# ================================================
 resource "aws_security_group" "frontend_sg" {
   name        = "frontend-sg"
-  description = "Security group para frontend"
+  description = "Security group para servidor frontend"
   vpc_id      = var.vpc_id
 
   ingress {
+    description = "HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -12,6 +15,7 @@ resource "aws_security_group" "frontend_sg" {
   }
 
   ingress {
+    description = "HTTPS"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -19,6 +23,7 @@ resource "aws_security_group" "frontend_sg" {
   }
 
   ingress {
+    description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -26,6 +31,7 @@ resource "aws_security_group" "frontend_sg" {
   }
 
   egress {
+    description = "All outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -33,16 +39,18 @@ resource "aws_security_group" "frontend_sg" {
   }
 
   tags = {
-    Name = "frontend-sg"
+    Name        = "frontend-sg"
+    Environment = "production"
   }
 }
 
 resource "aws_security_group" "backend_sg" {
   name        = "backend-sg"
-  description = "Security group para backend"
+  description = "Security group para servidor backend"
   vpc_id      = var.vpc_id
 
   ingress {
+    description = "Backend API"
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
@@ -50,6 +58,7 @@ resource "aws_security_group" "backend_sg" {
   }
 
   ingress {
+    description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -57,6 +66,7 @@ resource "aws_security_group" "backend_sg" {
   }
 
   egress {
+    description = "All outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -64,16 +74,18 @@ resource "aws_security_group" "backend_sg" {
   }
 
   tags = {
-    Name = "backend-sg"
+    Name        = "backend-sg"
+    Environment = "production"
   }
 }
 
 resource "aws_security_group" "rds_sg" {
   name        = "rds-sg"
-  description = "Security group para RDS"
+  description = "Security group para RDS database"
   vpc_id      = var.vpc_id
 
   ingress {
+    description     = "SQL Server"
     from_port       = 1433
     to_port         = 1433
     protocol        = "tcp"
@@ -81,6 +93,7 @@ resource "aws_security_group" "rds_sg" {
   }
 
   tags = {
-    Name = "rds-sg"
+    Name        = "rds-sg"
+    Environment = "production"
   }
 }

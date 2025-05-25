@@ -42,6 +42,9 @@ module "compute" {
   backend_sg_id = module.security.backend_sg_id
   frontend_sg_id = module.security.frontend_sg_id
   iam_instance_profile = module.s3.iam_instance_profile_name
+
+   rds_endpoint        = module.rds.rds_endpoint    
+  s3_bucket_name      = module.s3.bucket_name
 }
 
 module "rds" {
@@ -49,6 +52,7 @@ module "rds" {
 
   db_username = var.db_username
   db_password = var.db_password
+  db_name     = var.db_name
   private_subnet_ids = module.network.private_subnet_ids
   rds_sg_id = module.security.rds_sg_id
 }
@@ -59,18 +63,5 @@ module "s3" {
   bucket_name = var.bucket_name
 }
 
-output "frontend_public_ip" {
-  value = module.compute.frontend_public_ip
-}
 
-output "backend_public_ip" {
-  value = module.compute.backend_public_ip
-}
 
-output "rds_endpoint" {
-  value = module.rds.rds_endpoint
-}
-
-output "s3_bucket_name" {
-  value = module.s3.bucket_name
-}

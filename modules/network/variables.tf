@@ -1,4 +1,6 @@
-# modules/network/variables.tf
+# ================================================
+# FILE: modules/network/variables.tf
+# ================================================
 variable "vpc_cidr" {
   description = "CIDR block para VPC"
   type        = string

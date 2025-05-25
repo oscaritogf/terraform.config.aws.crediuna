@@ -1,46 +1,49 @@
-// modules/compute/main.tf
+# ================================================
+# FILE: modules/compute/main.tf
+# ================================================
 resource "aws_instance" "frontend" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.public_subnet_id
   vpc_security_group_ids      = [var.frontend_sg_id]
-  key_name                    = var.key_pair
+  key_name                    = var.key_name
   associate_public_ip_address = true
+  iam_instance_profile        = var.iam_instance_profile
 
   tags = {
-    Name = "frontend"
+    Name        = "frontend-server"
+    Environment = "production"
+    Type        = "frontend"
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo yum install -y docker
-              sudo service docker start
-              sudo docker run -d -p 80:80 ${var.frontend_image}
-              EOF
+  user_data = base64encode(templatefile("${path.module}/user_data_frontend.sh", {
+    github_token    = var.github_token
+    github_org      = var.github_org
+    frontend_repo   = var.frontend_repo
+    s3_bucket_name  = var.s3_bucket_name
+  }))
 }
 
 resource "aws_instance" "backend" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.public_subnet_id
   vpc_security_group_ids      = [var.backend_sg_id]
-  key_name                    = var.key_pair
+  key_name                    = var.key_name
   associate_public_ip_address = true
+  iam_instance_profile        = var.iam_instance_profile
 
   tags = {
-    Name = "backend"
+    Name        = "backend-server"
+    Environment = "production"
+    Type        = "backend"
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo yum install -y docker git
-              cd /home/ec2-user
-              git clone https://github.com/${var.github_org}/${var.backend_repo}.git
-              cd ${var.backend_repo}
-              sudo service docker start
-              sudo docker build -t backend .
-              sudo docker run -d -p 3000:3000 backend
-              EOF
+  user_data = base64encode(templatefile("${path.module}/user_data_backend.sh", {
+    github_token   = var.github_token
+    github_org     = var.github_org
+    backend_repo   = var.backend_repo
+    rds_endpoint   = var.rds_endpoint
+    s3_bucket_name = var.s3_bucket_name
+  }))
 }

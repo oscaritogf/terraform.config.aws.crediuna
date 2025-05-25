@@ -1,3 +1,6 @@
+# ================================================
+# FILE: outputs.tf (ROOT)
+# ================================================
 output "frontend_public_ip" {
   description = "IP pública del servidor frontend"
   value       = module.compute.frontend_public_ip
@@ -16,4 +19,9 @@ output "rds_endpoint" {
 output "s3_bucket_name" {
   description = "Nombre del bucket S3"
   value       = module.s3.bucket_name
+}
+
+output "vpc_id" {
+  description = "ID de la VPC creada"
+  value       = module.network.vpc_id
 }
