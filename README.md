@@ -1,7 +1,4 @@
-# ================================================
-# FILE: README.md
-# ================================================
-# Infraestructura AWS con Terraform
+
 
 Esta infraestructura despliega una aplicación web completa en AWS usando Terraform, incluyendo:
 
@@ -48,9 +45,10 @@ chmod 400 mi-key-pair.pem
 
 3. **Inicializar y aplicar Terraform:**
 ```bash
+aws configure
 terraform init
-terraform plan
-terraform apply
+ terraform plan -var-file="terraform.tfvars"
+terraform apply -var-file="terraform.tfvars"
 ```
 
 ## Variables Importantes
