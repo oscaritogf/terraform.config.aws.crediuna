@@ -37,7 +37,7 @@ module "compute" {
 
   ami_id = var.ami_id
   instance_type = var.instance_type
-  key_name = var.key_name
+  key_name = var.key_pair_name
   github_token = var.github_token
   github_org = var.github_org
   backend_repo = var.backend_repo
